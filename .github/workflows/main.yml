@@ -1,0 +1,32 @@
+name: Scan Cameras
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    env:
+      CAMERA_USER: ${{ secrets.CAMERA_USER }}
+      CAMERA_PASS: ${{ secrets.CAMERA_PASS }}
+      CAMERA_ID_START: "1000"
+      CAMERA_ID_END: "1100"
+      EXTRA_CAMERAS: "1070 - MALIBU HOME - 12"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install requests
+
+      - name: Run scan
+        run: python scan_cameras.py
